@@ -1,0 +1,97 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50  # Hz
+
+    # 1. Joint state broadcaster (publishes /joint_states for all joints)
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    # 2. Right arm (MoveIt / teleop execution)
+    right_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    # 3. Right gripper
+    right_gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    # 4. Left arm
+    left_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    # 5. Left gripper
+    left_gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    # 6. Head (yaw j_101 / pitch j_102) driven by head_bridge in mode=real
+    head_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+# === Per-controller joint mappings (names must match the URDF ros2_control block) ===
+
+right_arm_controller:
+  ros__parameters:
+    joints:
+      - "j_51"
+      - "j_52"
+      - "j_53"
+      - "j_54"
+      - "j_55"
+      - "j_56"
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    # cuMotion/OMPL trajectories can end with non-zero velocity; allow it so the
+    # JTC does not reject the goal at the trajectory end.
+    allow_nonzero_velocity_at_trajectory_end: true
+
+right_gripper_controller:
+  ros__parameters:
+    joints:
+      - "j_57"
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+left_arm_controller:
+  ros__parameters:
+    joints:
+      - "j_1"
+      - "j_2"
+      - "j_3"
+      - "j_4"
+      - "j_5"
+      - "j_6"
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_nonzero_velocity_at_trajectory_end: true
+
+left_gripper_controller:
+  ros__parameters:
+    joints:
+      - "j_7"
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+head_controller:
+  ros__parameters:
+    joints:
+      - "j_101"
+      - "j_102"
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    # head_bridge streams single-point trajectories at 50 Hz; allow non-zero
+    # end velocity so continuous streaming setpoints are never rejected.
+    allow_nonzero_velocity_at_trajectory_end: true

@@ -1,0 +1,26 @@
+# cuMotion planning pipeline for MoveIt 2 (Jazzy).
+#
+# Placed in pkg_robot_model_moveit_config/config/ so that MoveItConfigsBuilder
+# auto-discovers it (filename pattern "<pipeline>_planning.yaml") and registers a
+# planning pipeline named "isaac_ros_cumotion" alongside the default "ompl"
+# pipeline. OMPL remains the DEFAULT pipeline; select "isaac_ros_cumotion" in the
+# RViz "Planning Library" pane to plan the LEFT arm with cuMotion (GPU). The right
+# arm keeps using OMPL.
+#
+# This pipeline uses the CumotionPlannerManager plugin, which forwards MoveIt
+# planning requests to the cuMotion planner node (started separately in Phase 4)
+# that performs GPU-accelerated planning against the left-arm XRDF.
+#
+# Content mirrors the reference shipped in
+#   share/isaac_ros_cumotion_moveit/config/isaac_ros_cumotion_planning.yaml
+planning_plugins:
+  - isaac_ros_cumotion_moveit/CumotionPlanner
+request_adapters:
+  - default_planning_request_adapters/ValidateWorkspaceBounds
+  - default_planning_request_adapters/CheckStartStateBounds
+  - default_planning_request_adapters/CheckStartStateCollision
+  - default_planning_request_adapters/ResolveConstraintFrames
+start_state_max_bounds_error: 0.1
+num_steps: 32
+
+
