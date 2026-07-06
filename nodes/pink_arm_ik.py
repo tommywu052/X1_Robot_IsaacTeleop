@@ -211,7 +211,12 @@ class PinkArmIK(Node):
         R = quat_xyzw_to_R([pose.orientation.x, pose.orientation.y,
                             pose.orientation.z, pose.orientation.w])
         arm.raw_pos = self.XR2ROBOT @ p
-        arm.raw_quat = R_to_quat_xyzw(self.XR2ROBOT @ R)
+        # Orientation must be a proper CHANGE OF BASIS (similarity transform):
+        # R_robot = C @ R_xr @ C.T, C = XR2ROBOT. Left-multiplying only (C @ R_xr)
+        # cancels in the clutch delta (R0.T@R1) and leaves the controller rotation
+        # in XR axes -> rotations about 2 of 3 axes felt inverted. Conjugation
+        # re-expresses rotation in robot axes, consistent with the position map.
+        arm.raw_quat = R_to_quat_xyzw(self.XR2ROBOT @ R @ self.XR2ROBOT.T)
 
     def _on_engage(self, req, resp):
         self.engaged = bool(req.data)

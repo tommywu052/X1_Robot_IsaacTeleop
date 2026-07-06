@@ -9,6 +9,15 @@
 
 ---
 
+## 變更紀錄 (Change History)
+
+### 2026-07-06 — Quest3 方向校正 + 左夾爪修復
+- 頭部（headpose）與手腕旋轉方向校正。
+- 修復左夾爪（j_7）不動：`joint_map["j_7"]` direction 改 `-1`。
+- 新增 `diag/servo_tool.cpp`（Feetech 伺服狀態 / torque 診斷）。
+
+---
+
 ## 1. 三層式架構
 
 ```
