@@ -19,7 +19,7 @@ async function refreshStatus() {
   try {
     const s = await (await fetch("/api/status")).json();
     const via = s.daemon ? "daemon" : "spawn";
-    statusEl.textContent = `${s.dds} ， ${s.mapper} ， ${via} ， lead ${s.lead_s}s`;
+    statusEl.textContent = `${s.dds} \u00b7 ${s.mapper} \u00b7 ${via} \u00b7 lead ${s.lead_s}s`;
     statusEl.className = "status " + (s.daemon ? "ok" : "warn");
     statusEl.title = s.daemon
       ? `Resident player on ${s.socket}`
@@ -43,13 +43,13 @@ function render() {
       btn.textContent = g.name;
       const tag = document.createElement("span");
       tag.className = "tag";
-      tag.textContent = g.sample ? "sample ， " + g.tier : g.tier;
+      tag.textContent = g.sample ? "sample \u00b7 " + g.tier : g.tier;
       btn.append(tag);
       btn.addEventListener("click", () => play(g, btn));
       return btn;
     })
   );
-  counts.textContent = `${shown.length} shown ， ${gestures.filter((g) => g.playable).length} playable of ${gestures.length}`;
+  counts.textContent = `${shown.length} shown \u00b7 ${gestures.filter((g) => g.playable).length} playable of ${gestures.length}`;
 }
 
 async function play(g, btn) {
