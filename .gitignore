@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+
+# version-check output, not source
+log/
+
+# last spawned player's stdout, kept only to debug a run that did not move
+laban/ui/data/
+
+# colcon output, if anyone builds in place
+build/
+install/

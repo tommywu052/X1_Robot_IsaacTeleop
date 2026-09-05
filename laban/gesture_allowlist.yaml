@@ -1,0 +1,180 @@
+# X1 gesture allow-list -- measured on the robot's URDF, not hand-written.
+#
+# Two questions have to be answered separately, because either one alone gives a
+# wrong list: can the IK solve this gesture, and does the solved pose put the arms
+# inside each other? `thanks` is playable at full amplitude and still collides in
+# 6 of its 8 keyframes.
+#
+# `gesture_policy.py` reads this file for the tiers. The block list is also
+# compiled into that module, so the blocks survive this file going missing.
+
+meta:
+  measured_on: cam (WSL2 Ubuntu 24.04)
+  measured_at: "2026-09-01"
+  urdf: /home/tommywu/xiaobei_X1_ws/src/pkg_robot_model/urdf/pkg_robot_model.urdf
+  srdf: /home/tommywu/xiaobei_X1_ws/src/pkg_robot_model_moveit_config/config/pkg_robot_model.srdf
+  collision_pairs_after_srdf_filter: 169
+  library_size: 92
+
+# Why the tier boundary is 0.010 m and not 0.
+#
+# The shoulders carry a standing tracking error of 0.019 rad at the ready pose
+# and 0.117 rad in a closed two-handed pose (see laban/README.md). Over the upper
+# arm that is roughly 6-35 mm of positional
+# error, so a computed clearance of 4 mm is not a clearance the hardware can be
+# trusted to keep. Those gestures are recorded as `caution`, not as safe.
+#
+# They are not blocked: 0.004 m is what most head-only gestures measure, since
+# the arms hold a single pose throughout, and blocking them would remove nod /
+# shake head / laugh head, which the conversation path uses constantly and which
+# have never been observed to touch. What the tier buys is that `caution`
+# gestures stay out of ASPIRE's search space while remaining available to the
+# human-driven chat path.
+tiers:
+  blocked: {max_gap_m: 0.0}
+  caution: {max_gap_m: 0.010}
+  ok: {}
+
+policy:
+  # The conversation path may use ok + caution.
+  chat: [ok, caution]
+  # The ASPIRE agent may only use `ok`. A skill learnt on a gesture whose
+  # clearance sits inside the servo error is not a skill, it is a coin flip.
+  aspire: [ok]
+  # Nothing may use `blocked`, including a human typing a name into the UI.
+  blocked_is_absolute: true
+
+# 13 gestures. min_gap 0.000 m means the collision meshes interpenetrate.
+blocked:
+  bad:            {min_gap_m: 0.000, colliding_keyframes: 1}
+  help4:          {min_gap_m: 0.000, colliding_keyframes: 2}
+  howareyou4:     {min_gap_m: 0.000, colliding_keyframes: 2}
+  please4:        {min_gap_m: 0.000, colliding_keyframes: 2}
+  sorry:          {min_gap_m: 0.000, colliding_keyframes: 2}
+  sorry2:         {min_gap_m: 0.000, colliding_keyframes: 3}
+  thanks:         {min_gap_m: 0.000, colliding_keyframes: 6}
+  think d high l: {min_gap_m: 0.000, colliding_keyframes: 2}
+  think d high s: {min_gap_m: 0.000, colliding_keyframes: 2}
+  think d low l:  {min_gap_m: 0.000, colliding_keyframes: 2}
+  think d low s:  {min_gap_m: 0.000, colliding_keyframes: 2}
+  tired:          {min_gap_m: 0.000, colliding_keyframes: 1}
+  youandme4:      {min_gap_m: 0.000, colliding_keyframes: 1}
+
+# 19 gestures with a clearance smaller than the servo tracking error.
+caution:
+  happy4:                   0.003
+  beat rotate:              0.004
+  contrast:                 0.004
+  deictic you rotate:       0.004
+  laugh head:               0.004
+  nod:                      0.004
+  ok4:                      0.004
+  shake head:               0.004
+  theme head down continue: 0.004
+  theme head down end:      0.004
+  theme head lean continue: 0.004
+  theme head lean end:      0.004
+  theme rotate continue:    0.004
+  theme rotate end:         0.004
+  sleepy4:                  0.005
+  theme still continue:     0.005
+  theme still end:          0.005
+  i4:                       0.007
+  hungry:                   0.008
+
+# 60 gestures. This is the ASPIRE search space.
+ok:
+  look at:              0.010
+  question:             0.012
+  deictic here:         0.018
+  deictic this:         0.018
+  dummy:                0.022
+  nice:                 0.022
+  initialize:           0.023
+  dance4:               0.024
+  quit:                 0.027
+  test:                 0.032
+  beat2:                0.036
+  panic:                0.037
+  away:                 0.039
+  away2:                0.039
+  away4:                0.039
+  beat:                 0.039
+  beat3:                0.039
+  big:                  0.039
+  big2:                 0.039
+  catch:                0.039
+  come:                 0.039
+  come2:                0.039
+  deictic me l:         0.039
+  deictic me rotate l:  0.039
+  deictic that h:       0.039
+  deictic that m:       0.039
+  deictic that rotate:  0.039
+  deictic there h:      0.039
+  deictic there m:      0.039
+  deictic there rotate: 0.039
+  deictic you d:        0.039
+  deictic you l:        0.039
+  deictic you r:        0.039
+  dont like4:           0.039
+  drink4:               0.039
+  go:                   0.039
+  good:                 0.039
+  hello4:               0.039
+  lets go4:             0.039
+  many:                 0.039
+  robot d:              0.039
+  say:                  0.039
+  sleepy:               0.039
+  small:                0.039
+  sorry3:               0.039
+  surprised:            0.039
+  think l high l:       0.039
+  think l high s:       0.039
+  think l low l:        0.039
+  think l low s:        0.039
+  weather:              0.039
+  robot d move:         0.067
+  yawn:                 0.079
+  confuse r:            0.097
+  goodbye:              0.097
+  hello:                0.097
+  interesting:          0.128
+  open two arms:        0.130
+  relax hand:           0.204
+  wave happily:         0.205
+
+# Arms never change across keyframes. With the head disabled these are genuine
+# no-ops that still report ok, which is the trap laban/README.md warns about: the
+# player looks broken when it is doing exactly what it was asked.
+head_only:   # 19
+  - away4
+  - beat rotate
+  - contrast
+  - deictic you rotate
+  - laugh head
+  - look at
+  - nod
+  - ok4
+  - shake head
+  - sleepy4
+  - test
+  - theme head down continue
+  - theme head down end
+  - theme head lean continue
+  - theme head lean end
+  - theme rotate continue
+  - theme rotate end
+  - theme still continue
+  - theme still end
+
+# The player retries at 0.85 / 0.70 / 0.55 / 0.40 and settles here;
+# everything else plays at 1.00. Phase 1 note: `hello` is one of these, so
+# the first task's gesture runs at 0.70 of the Laban amplitude by design.
+reduced_amplitude:   # 5
+  confuse r:    0.70
+  goodbye:      0.70
+  hello:        0.70
+  interesting:  0.55
+  robot d move: 0.85

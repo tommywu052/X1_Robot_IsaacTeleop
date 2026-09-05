@@ -9,7 +9,16 @@
 
 ---
 
+> 想直接播手勢而不戴頭顯？看 **[`laban/`](laban/README.md)** — Labanotation 手勢庫
+> （92 個上半身手勢）＋ 網頁點選介面／CLI，跑在同一套 ROS 2 堆疊上，不需要 Quest 3。
+
 ## 變更紀錄 (Change History)
+
+### 2026-09-05 — 新增 Laban 手勢播放（`laban/`）
+- Microsoft LabanotationSuite 手勢 JSON → X1 雙臂與頭部軌跡，Isaac 與真機同一個節點。
+- 手動控制介面：`bash laban/ui/run_ui.sh`（網頁）或 `laban/laban_ctl.py`（CLI）。
+- 頭部兩軸（`j_101` yaw / `j_102` pitch）：URDF 宣告為 continuous 無限位，限位與速度上限改由軟體把關。
+- 13 個全幅度會自我碰撞的手勢由 `laban/gesture_policy.py` 硬性封鎖。
 
 ### 2026-07-06 — Quest3 方向校正 + 左夾爪修復
 - 頭部（headpose）與手腕旋轉方向校正。
@@ -204,7 +213,11 @@ teleop_share/
 │   ├─ pkg_robot_model/                 # URDF、my_controllers.yaml、moveit_real/isaac 等 launch
 │   ├─ pkg_robot_model_moveit_config/   # MoveIt 設定
 │   └─ xiaobei_hardware/                # Feetech 伺服 ros2_control 硬體介面（C++）
-└─ diag/                       # 診斷小工具（probe_topics / head_probe / rate_probe / ...）
+├─ diag/                       # 診斷小工具（probe_topics / head_probe / rate_probe / ...）
+└─ laban/                      # Labanotation 手勢播放（不需 Quest3；見 laban/README.md）
+    ├─ nodes/                  #   ROS 2 player 與常駐 daemon
+    ├─ gestures/library/       #   92 個 LabanotationLibrary 手勢
+    └─ ui/                     #   網頁點選介面（純 HTTP，不碰 ROS）
 ```
 
 ---
