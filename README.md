@@ -1,4 +1,4 @@
-﻿# X1 Quest3 遙操套件（Windows + WSL2 版）
+# X1 Quest3 遙操套件（Windows + WSL2 版）
 
 用 Quest3（或桌面 IWER 模擬）遙控 X1 機器人：**雙臂 + 夾爪 + 頭部**。
 本 README 針對「後端 bridge 與機器人堆疊跑在 **WSL2（代號 cam）**、從 **Windows** 部署」的情境。
@@ -11,8 +11,23 @@
 
 > 想直接播手勢而不戴頭顯？看 **[`laban/`](laban/README.md)** — Labanotation 手勢庫
 > （92 個上半身手勢）＋ 網頁點選介面／CLI，跑在同一套 ROS 2 堆疊上，不需要 Quest 3。
+>
+> 想自己新增手勢？看 **[`laban_author/`](laban_author/README.md)** — 上傳一段影片，
+> 產出 Labanotation，存進上面那個手勢庫並直接在 X1 上播。不需要 Kinect。
 
 ## 變更紀錄 (Change History)
+
+### 2026-09-06 — 新增手勢編寫工具（`laban_author/`）＋ 介面中文化
+- 影片 → Labanotation：SAM3D-Body 估計上半身，沿用 LabanotationSuite 原本的量化
+  演算法，產出的樂譜現有的 player 與 mapper 直接可用。不需要 Kinect 深度相機。
+- 與原工具的對照可驗證而非自稱：`validate.py` 跑套件附的六段 Kinect 錄影，五段完全
+  重現，第六段只差在原本 GUI 裡手動挑選的關鍵幀。
+- 兩件原工具沒做的事：從臉部推導頭部方向（Kinect 骨架給不出來），以及判斷並顯示
+  取景是否正確（估計器不論拍到與否都會回傳一整具身體，只拍到軀幹時會產出看不出錯
+  的錯誤樂譜）。
+- 新手勢層級為 `unknown`：手動可播，但在量到自我碰撞間隙之前不會納入自主運行。
+- 兩個網頁介面（編寫 9300／播放 9200）文字改為繁體中文。階段名稱、取景判定與安全
+  層級在傳輸時維持英文，因為頁面、狀態檔、CLI 與 `gesture_policy.py` 都以其為識別碼。
 
 ### 2026-09-05 — 新增 Laban 手勢播放（`laban/`）
 - Microsoft LabanotationSuite 手勢 JSON → X1 雙臂與頭部軌跡，Isaac 與真機同一個節點。
