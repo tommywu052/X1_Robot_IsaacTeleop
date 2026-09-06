@@ -1,36 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>X1 Gesture Control</title>
+  <title>X1 手勢控制</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
   <header>
-    <h1>X1 Gesture Control</h1>
-    <div id="status" class="status">connecting&hellip;</div>
+    <h1>X1 手勢控制</h1>
+    <div id="status" class="status">連線中&hellip;</div>
   </header>
 
   <div class="controls">
-    <input id="search" type="search" placeholder="Filter gestures&hellip;" autocomplete="off">
+    <input id="search" type="search" placeholder="搜尋手勢&hellip;" autocomplete="off">
     <label class="speed">
-      Speed <output id="speedOut">1.00&times;</output>
+      速度 <output id="speedOut">1.00&times;</output>
       <input id="speed" type="range" min="0.4" max="1.6" step="0.05" value="1">
     </label>
     <label class="toggle">
-      <input id="head" type="checkbox" checked> Move head
+      <input id="head" type="checkbox" checked> 頭部跟著動
     </label>
-    <button id="stop" class="stop">Stop</button>
+    <button id="stop" class="stop">停止</button>
   </div>
 
-  <p id="log" class="log">Pick a gesture to play it on the robot.</p>
+  <p id="log" class="log">點選手勢即可在機器人上播放。</p>
 
   <main id="grid" class="grid"></main>
 
   <footer>
     <span id="counts"></span>
-    <span class="hint">Greyed gestures are blocked by <code>laban/gesture_policy.py</code>; hover for the reason.</span>
+    <span class="hint">灰色手勢已被 <code>laban/gesture_policy.py</code> 擋下，滑鼠移上去可看原因。</span>
   </footer>
 
   <script src="/static/app.js"></script>
