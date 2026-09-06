@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>X1 手勢編寫</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>X1 手勢編寫</h1>
+    <div id="status" class="status">連線中&hellip;</div>
+  </header>
+
+  <section class="step">
+    <h2><span class="num">1</span> 錄影</h2>
+    <p class="note">
+      請人正面對著鏡頭做出手勢，從頭到臀部都要入鏡，並佔滿畫面大部分。
+      取景決定成敗 &mdash; 符號是以 45 度為單位量化的，所以精度從來不是問題。
+    </p>
+    <div class="row">
+      <label class="file">
+        <input id="video" type="file" accept="video/*">
+        <span id="videoName">選擇影片&hellip;</span>
+      </label>
+      <input id="name" type="text" placeholder="手勢名稱" autocomplete="off">
+      <label class="slider">
+        幀數上限 <output id="framesOut">300</output>
+        <input id="maxFrames" type="range" min="60" max="600" step="30" value="300">
+      </label>
+      <button id="upload" class="primary" disabled>開始估計</button>
+    </div>
+    <p class="note dim" id="cost">
+      正在量測這台機器需要多久&hellip;
+    </p>
+
+    <div id="jobs" class="jobs"></div>
+  </section>
+
+  <section class="step" id="progressStep" hidden>
+    <h2><span class="num">2</span> 估計中</h2>
+    <div class="bar"><div id="bar" class="fill"></div></div>
+    <p id="stage" class="note"></p>
+    <pre id="joblog" class="joblog"></pre>
+  </section>
+
+  <section class="step" id="framingStep" hidden>
+    <h2><span class="num">3</span> 檢查取景</h2>
+    <p id="verdict" class="verdict"></p>
+    <p class="note">
+      下方是估計出的上半身，疊在它所依據的畫面上。不論實際拍到與否，估計器都會回傳
+      一整具身體，包含它從沒看見的部位，所以這是往下走之前唯一值得先看的東西：
+      如果骨架沒有貼在人身上，後面做什麼都救不回來。
+    </p>
+    <img id="overlay" class="overlay" alt="估計出的上半身疊在來源畫面上">
+  </section>
+
+  <section class="step" id="editStep" hidden>
+    <h2><span class="num">4</span> 調整手勢</h2>
+    <p class="note">
+      手腕的運動量，手在加速時數值高，關鍵幀就取在它的波峰上。
+      在曲線上點一下可以新增或移除關鍵幀。
+    </p>
+    <canvas id="energy" class="energy" height="150"></canvas>
+
+    <div class="row">
+      <label class="slider">
+        平滑度 <output id="windowOut">31</output>
+        <input id="window" type="range" min="11" max="121" step="2" value="31">
+      </label>
+      <label class="slider">
+        Sigma <output id="sigmaOut">5.0</output>
+        <input id="sigma" type="range" min="1" max="20" step="0.5" value="5">
+      </label>
+      <label class="toggle">
+        <input id="deriveHead" type="checkbox" checked> 由臉部推導頭部
+      </label>
+      <label class="toggle">
+        <input id="acromion" type="checkbox"> 以肩峰為手臂起點
+      </label>
+      <label class="toggle">
+        <input id="baseFirst" type="checkbox"> 保留軀幹轉向
+      </label>
+      <button id="reset" class="ghost">重設關鍵幀</button>
+    </div>
+    <p id="editLog" class="note dim"></p>
+
+    <div class="tablewrap">
+      <table id="score" class="score">
+        <thead>
+          <tr>
+            <th>關鍵幀</th><th>時間</th><th>頭部</th>
+            <th>右手肘</th><th>右手腕</th>
+            <th>左手肘</th><th>左手腕</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="step" id="robotStep" hidden>
+    <h2><span class="num">5</span> 套用到機器人</h2>
+    <div class="row">
+      <button id="save" class="primary">存入手勢庫</button>
+      <button id="play" class="primary" disabled>在 X1 上播放</button>
+      <label class="slider">
+        速度 <output id="speedOut">1.00&times;</output>
+        <input id="speed" type="range" min="0.4" max="1.6" step="0.05" value="1">
+      </label>
+      <label class="toggle">
+        <input id="playHead" type="checkbox" checked> 頭部跟著動
+      </label>
+      <button id="stop" class="stop">停止</button>
+    </div>
+    <p id="robotLog" class="note"></p>
+  </section>
+
+  <footer>
+    <span id="libInfo"></span>
+    <span class="hint">
+      存下的手勢會進入播放介面所列的同一個手勢庫。
+    </span>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

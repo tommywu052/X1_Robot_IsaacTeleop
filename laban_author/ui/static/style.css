@@ -1,0 +1,258 @@
+/* Same palette as the playback UI, so the two read as one tool. */
+:root {
+  --bg: #101214;
+  --panel: #1a1e21;
+  --line: #2b3136;
+  --text: #e6e8ea;
+  --dim: #8d959c;
+  --accent: #76b900;
+  --warn: #d8a200;
+  --err: #d05050;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 20px 24px 40px;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+  max-width: 1180px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+
+h1 { font-size: 20px; font-weight: 600; margin: 0; }
+
+.status {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--dim);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+.status.ok { color: var(--accent); border-color: #3a5210; }
+.status.warn { color: var(--warn); border-color: #4a3b00; }
+.status.err { color: var(--err); border-color: #4a2020; }
+
+.step {
+  margin: 26px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.step:first-of-type { border-top: none; }
+
+h2 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  color: var(--dim);
+  font-size: 12px;
+}
+
+.note { margin: 0 0 12px; font-size: 13px; color: #b9c0c6; max-width: 74ch; }
+.note.dim { color: var(--dim); }
+.note.ok { color: var(--accent); }
+.note.warn { color: var(--warn); }
+.note.err { color: var(--err); }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin: 12px 0;
+}
+
+input[type="text"] {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 14px;
+  min-width: 200px;
+}
+input[type="text"]:focus { outline: none; border-color: var(--accent); }
+
+.file { position: relative; overflow: hidden; }
+.file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.file span {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 14px;
+  color: var(--dim);
+  cursor: pointer;
+}
+.file:hover span { border-color: var(--accent); color: var(--text); }
+
+.slider { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--dim); }
+.slider output { color: var(--text); font-variant-numeric: tabular-nums; min-width: 44px; }
+.slider input { accent-color: var(--accent); }
+
+.toggle { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--dim); }
+.toggle input { accent-color: var(--accent); }
+
+button {
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color .12s, background .12s;
+}
+.primary {
+  background: #22301a;
+  border: 1px solid #3a5210;
+  color: var(--accent);
+}
+.primary:hover:not(:disabled) { background: #2b3d20; border-color: var(--accent); }
+.primary:disabled { background: #15181a; border-color: var(--line); color: #5a6167; cursor: not-allowed; }
+
+.ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--dim);
+}
+.ghost:hover { border-color: var(--accent); color: var(--text); }
+
+.stop {
+  background: transparent;
+  border: 1px solid #4a2020;
+  color: var(--err);
+}
+.stop:hover { background: #2a1616; }
+
+/* recordings already estimated in this session */
+.jobs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.job {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+.job:hover { border-color: var(--accent); }
+.job.active { border-color: var(--accent); background: #22301a; }
+.job.failed { border-color: #4a2020; color: var(--err); }
+.job small { display: block; color: var(--dim); font-size: 11px; }
+
+.bar {
+  height: 6px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width .3s;
+}
+
+.joblog {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: 12px/1.6 ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color: var(--dim);
+  max-height: 150px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+/* The framing verdict, said before the picture it explains. */
+.verdict {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  font-size: 13px;
+  max-width: 74ch;
+}
+.verdict.ok { border-color: #3a5210; color: var(--accent); }
+.verdict.bad { border-color: #4a3b00; color: var(--warn); }
+.verdict b { font-weight: 600; }
+.verdict span { color: var(--dim); display: block; margin-top: 4px; }
+/* A dropped tail is worth its own colour: it is the one thing on this page
+   that cannot be seen by looking at what is on the page. */
+.verdict b.cut { color: var(--warn); display: block; }
+.verdict b.cut + span { margin-bottom: 10px; }
+
+.overlay {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.energy {
+  display: block;
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: crosshair;
+}
+
+.tablewrap { overflow-x: auto; }
+.score {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.score th, .score td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.score th { color: var(--dim); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.score tbody tr:hover { background: #1f2529; }
+.score td.sym { color: #b9c0c6; }
+.score td.head { color: var(--accent); }
+
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--dim);
+}
+footer code { color: #b9c0c6; }
+.hint { margin-left: auto; }
